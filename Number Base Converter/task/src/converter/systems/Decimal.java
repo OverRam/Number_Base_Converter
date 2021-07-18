@@ -4,35 +4,27 @@ public class Decimal {
     private static final StringBuilder sb = new StringBuilder();
 
     static String convertSwitch(long num, int rand) {
-        switch (rand) {
-            case 2:
-                toBinary(num);
-                return sb.reverse().toString();
-            case 8:
-                return toOcta(num);
-            case 16:
-                return toHex(num);
-            default:
-                return "Wrong number";
-        }
+        calc(num, rand);
+        return sb.reverse().toString();
     }
 
-    private static String toBinary(long num) {
-        if (num == 1 || num == 0) {
+// it work to any system
+    private static String calc(long num, int rand) {
+        char a = 'A';
+        int rem;
+        if (num < rand) {
+            if (num > 9) {
+                return sb.append((char) (a + num - 10)).toString();
+            }
             return sb.append(num).toString();
         } else {
-            sb.append(num % 2);
+            rem = (int) (num % rand);
+            if (rem > 9) {
+                sb.append((char) (a + rem - 10));
+            } else {
+                sb.append(rem);
+            }
         }
-        return toBinary(num / 2);
+        return calc((num - rem) / rand, rand);
     }
-
-    private static String toOcta(long num) {
-        return "s";
-    }
-
-    private static String toHex(long num) {
-        return "s";
-    }
-
-
 }
