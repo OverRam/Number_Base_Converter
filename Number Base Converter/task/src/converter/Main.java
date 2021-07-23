@@ -1,7 +1,6 @@
 package converter;
 
-import converter.systems.Decimal;
-
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -19,24 +18,42 @@ public class Main {
     static boolean run() {
         Scanner sc = new Scanner(System.in);
         String num;
-        int toSystemNum;
-        String toFromDec;
+        int[] baseAsInt;
+        boolean isBack = false;
+        System.out.println("Enter two numbers in format: {source base} {target base} (To quit type /exit)");
 
-        System.out.println("Do you want to convert /from decimal or /to decimal? (To quit type /exit) ");
-        toFromDec = sc.nextLine();
+        String[] inpFormat = sc.nextLine().split(" ");
+        if (!"/exit".equals(inpFormat[0])) {
+            baseAsInt = getBase(inpFormat);
 
-        if (!"/exit".equals(toFromDec)) {
-            System.out.print("Enter " + ("/to".equals(toFromDec) ? "source number" : "a number in decimal system"));
-            num = sc.nextLine().toUpperCase();
+            while (!isBack) {
+                System.out.println("Enter number in base " + baseAsInt[0] + " to convert to base " + baseAsInt[1] +
+                        " (To go back type /back) ");
+                num = sc.nextLine();
+                isBack = "/back".equals(num);
 
-            System.out.print("Enter " + ("/to".equals(toFromDec) ? "source" : "target") + " base: ");
-            toSystemNum = sc.nextInt();
+                if (!isBack) {
+                    System.out.println("Conversion result: " + Converter.convert(num, baseAsInt[0], baseAsInt[1]));
+                }
 
-            System.out.println("Conversion " + ("/to".equals(toFromDec) ? "to decimal " : "") + "result: " +
-                    Decimal.convertSwitch(num, toSystemNum, toFromDec) + "\n");
+            }
+
         }
 
-        return !"/exit".equals(toFromDec);
+        return !"/exit".equals(inpFormat[0]);
     }
 
+    static int[] getBase(String[] arrayInp) {
+        int[] intsArray = new int[2];
+
+        try {
+            for (int i = 0; i < 2; i++) {
+                intsArray[i] = Integer.parseInt(arrayInp[i]);
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Wrong base!");
+            intsArray[0] = -1;
+        }
+        return intsArray;
+    }
 }
